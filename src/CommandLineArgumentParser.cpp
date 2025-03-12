@@ -14,7 +14,7 @@ CommandLineArgumentParser::CommandLineArgumentParser(int argc, char** argv) : m_
         ("b,binary", "Machine Code", cxxopts::value<bool>()->default_value(false));
 }
 
-
+// Parses the provided command line arguments and returns a CommandLineOptions struct that contains the results of the parse.
 CommandLineOptions CommandLineArgumentParser::parse() {
     auto result = m_options.parse(m_argc, m_argv);
 
