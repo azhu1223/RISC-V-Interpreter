@@ -1,3 +1,6 @@
+#ifndef COMMAND_LINE_ARGUMENTS_PARSER_H
+#define COMMAND_LINE_ARGUMENTS_PARSER_H
+
 #include "Utility.h"
 
 #include "cxxopts.hpp"
@@ -26,3 +29,5 @@ private:
     std::string m_helpString;
     cxxopts::Options m_options;
 };
+
+#endif

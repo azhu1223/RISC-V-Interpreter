@@ -1,3 +1,6 @@
+#ifndef FILE_SYSTEM_HANDLER
+#define FILE_SYSTEM_HANDLER
+
 #include "Utility.h"
 
 #include <filesystem>
@@ -32,3 +35,5 @@ bool FileSystemHandler::setPath(const fs::path& path) {
 
     return validFile;
 }
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef UTILITY_H
+#define UTILITY_H
+
 #include <vector>
 #include <bitset>
 #include <memory>
@@ -19,3 +22,5 @@ using u_ptr = std::unique_ptr<T>;
 
 template <typename T>
 using s_ptr = std::shared_ptr<T>;
+
+#endif
