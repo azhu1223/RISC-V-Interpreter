@@ -36,14 +36,31 @@ TEST_F(CommandLineArgumentParserTest, HelpString) {
     CommandLineArgumentParser parser(argc, argv);
     std::string helpString = parser.getHelpString();
 
-    std::cout << helpString;
+    const std::string expectedString = "\nUsage:\n  program [OPTION...]\n\n  -f, --file arg  File Path\n  -b, --binary    Is Machine Code\n  -h, --help      Help\n";
+
+    EXPECT_EQ(helpString, expectedString);
 }
 
 TEST_F(CommandLineArgumentParserTest, MissingPath) {
     char * argv[] = {m_programName.data()};
     CommandLineArgumentParser parser(1, argv);
 
-    Result<CommandLineOptions> result = parser.parse();
+    Result<CommandLineOptions> result;
+
+    result = parser.parse();
 
     EXPECT_FALSE(result.first);
+    EXPECT_EQ(result.second.exceptionMessage, "Option 'file' has no value");
+}
+
+TEST_F(CommandLineArgumentParserTest, MissingPathOptionArgument) {
+    char * argv[] = {m_programName.data(), m_pathMarker.data()};
+    CommandLineArgumentParser parser(2, argv);
+
+    Result<CommandLineOptions> result;
+
+    result = parser.parse();
+
+    EXPECT_FALSE(result.first);
+    EXPECT_EQ(result.second.exceptionMessage, "Option 'f' is missing an argument");
 }

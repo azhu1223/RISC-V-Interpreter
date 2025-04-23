@@ -12,6 +12,7 @@ namespace fs = std::filesystem;
 
 // Stores the results of parsing the command line arguments
 struct CommandLineOptions {
+    std::string exceptionMessage;
     fs::path programPath;
     bool isMachineCode;
     bool isHelp;

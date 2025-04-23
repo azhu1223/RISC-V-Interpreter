@@ -14,23 +14,37 @@ CommandLineArgumentParser::CommandLineArgumentParser(int argc, char** argv) : m_
         ("b,binary", "Is Machine Code")
         ("h,help", "Help");
 
-    m_options.allow_unrecognised_options();
     m_helpString = m_options.help();
 }
 
 // Parses the provided command line arguments and returns a CommandLineOptions struct that contains the results of the parse.
 Result<CommandLineOptions> CommandLineArgumentParser::parse() {
-    auto result = m_options.parse(m_argc, m_argv);
+    cxxopts::ParseResult result;
 
-    if (result.unmatched().size() != 0) {
-        return {false, {}};
+    try {
+        result = m_options.parse(m_argc, m_argv);
     }
 
-    fs::path filePath = result["file"].as<std::string>();
+    catch (const cxxopts::exceptions::missing_argument& error) {
+        return {false, {.exceptionMessage = error.what()}};
+    }
+
+    fs::path filePath;
+
+    try {
+        filePath = result["file"].as<std::string>();
+    }
+    
+    catch (const cxxopts::exceptions::option_has_no_value& error) {
+        return {false, {.exceptionMessage = error.what()}};
+    }
+
     bool isMachineCode = result["binary"].as<bool>();
     bool isHelp = result["help"].as<bool>();
 
-    return {true, {filePath, isMachineCode, isHelp}};
+    return {true, {.programPath = filePath, 
+                    .isMachineCode = isMachineCode, 
+                    .isHelp = isHelp}};
 }
 
 std::string CommandLineArgumentParser::getHelpString() const {
