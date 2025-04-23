@@ -47,6 +47,23 @@ include_directories(libraries)
 
 # Libraries
 
-#gtest_discover_tests(Board_test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
-#gtest_discover_tests(RandomBoardGenerator_test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
-#gtest_discover_tests(PlayerInput_test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+# add_library(Interpreter_lib src/Interpreter.cpp)
+add_library(BinaryFileSystemHandler_lib src/BinaryFileSystemHandler.cpp)
+add_library(CommandLineArgumentParser_lib src/CommandLineArgumentParser.cpp)
+
+add_executable(interpreter src/main.cpp)
+target_link_libraries(
+  interpreter
+  BinaryFileSystemHandler_lib
+  CommandLineArgumentParser_lib
+)
+
+add_executable(CommandLineArgumentParser_test tests/CommandLineArgumentParserTest.cpp)
+target_link_libraries(
+  CommandLineArgumentParser_test
+  CommandLineArgumentParser_lib
+)
+
+gtest_discover_tests(CommandLineArgumentParser_test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+
+
