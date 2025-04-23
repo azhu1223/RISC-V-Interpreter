@@ -62,6 +62,7 @@ add_executable(CommandLineArgumentParser_test tests/CommandLineArgumentParserTes
 target_link_libraries(
   CommandLineArgumentParser_test
   CommandLineArgumentParser_lib
+  gtest_main
 )
 
 gtest_discover_tests(CommandLineArgumentParser_test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
