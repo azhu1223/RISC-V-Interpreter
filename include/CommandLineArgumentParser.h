@@ -17,11 +17,12 @@ struct CommandLineOptions {
 class CommandLineArgumentParser {
 public:
     CommandLineArgumentParser(int argc, char** argv);
-    CommandLineOptions parse();
+    Result<CommandLineOptions> parse();
     std::string getHelpString() const;
     
 private:
     int m_argc;
     char** m_argv;
+    std::string m_helpString;
     cxxopts::Options m_options;
 };

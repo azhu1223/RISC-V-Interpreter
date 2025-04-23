@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv) {
     CommandLineArgumentParser commandLineArgumentParser(argc, argv);
-    CommandLineOptions arguments = commandLineArgumentParser.parse();
+    Result<CommandLineOptions> argumentResults = commandLineArgumentParser.parse();
 
     
 }
