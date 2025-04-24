@@ -13,34 +13,36 @@ CommandLineArgumentParser::CommandLineArgumentParser(int argc, char** argv) : m_
         ("f,file", "File Path", cxxopts::value<std::string>())
         ("b,binary", "Is Machine Code")
         ("h,help", "Help");
-
+    m_options.allow_unrecognised_options();
     m_helpString = m_options.help();
 }
 
 // Parses the provided command line arguments and returns a CommandLineOptions struct that contains the results of the parse.
 Result<CommandLineOptions> CommandLineArgumentParser::parse() {
-    cxxopts::ParseResult result;
+    cxxopts::ParseResult results;
 
     try {
-        result = m_options.parse(m_argc, m_argv);
+        results = m_options.parse(m_argc, m_argv);
     }
 
+    // If this exception was thrown, that means the -f/file option was provided, but an argument was not
     catch (const cxxopts::exceptions::missing_argument& error) {
-        return {false, {.exceptionMessage = error.what()}};
+        return {false, {.error = ParserErrorCode::MISSING_PATH_ARGUMENT}};
+    } 
+
+    if (results.unmatched().size() != 0) {
+        return {false, {.error = ParserErrorCode::UNRECOGNIZED_ARGUMENT}};
     }
 
-    fs::path filePath;
-
-    try {
-        filePath = result["file"].as<std::string>();
-    }
-    
-    catch (const cxxopts::exceptions::option_has_no_value& error) {
-        return {false, {.exceptionMessage = error.what()}};
+    // If this is true, that means the -f/file option was not provided
+    if (results.count("file") == 0) {
+        return {false, {.error = ParserErrorCode::MISSING_PATH_OPTION}};
     }
 
-    bool isMachineCode = result["binary"].as<bool>();
-    bool isHelp = result["help"].as<bool>();
+    std::string filePath = results["file"].as<std::string>();
+
+    bool isMachineCode = results["binary"].as<bool>();
+    bool isHelp = results["help"].as<bool>();
 
     return {true, {.programPath = filePath, 
                     .isMachineCode = isMachineCode, 

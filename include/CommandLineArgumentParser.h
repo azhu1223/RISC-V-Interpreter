@@ -10,12 +10,21 @@
 
 namespace fs = std::filesystem;
 
+// Represents possible errors encountered by the parser 
+enum class ParserErrorCode {
+    MISSING_PATH_OPTION,
+    MISSING_PATH_ARGUMENT,
+    UNRECOGNIZED_ARGUMENT
+};
+
 // Stores the results of parsing the command line arguments
 struct CommandLineOptions {
-    std::string exceptionMessage;
+    ParserErrorCode error;
     fs::path programPath;
     bool isMachineCode;
     bool isHelp;
+
+    static std::string parserErrorCodeToString(ParserErrorCode error);
 };
 
 class CommandLineArgumentParser {
@@ -30,5 +39,23 @@ private:
     std::string m_helpString;
     cxxopts::Options m_options;
 };
+
+inline std::string CommandLineOptions::parserErrorCodeToString(ParserErrorCode error) {
+    std::string errorString;
+
+    switch (error) {
+    case ParserErrorCode::MISSING_PATH_OPTION:
+        errorString = "File option not provided";
+        break;
+    case ParserErrorCode::MISSING_PATH_ARGUMENT:
+        errorString = "File path not provided";
+        break;
+    case ParserErrorCode::UNRECOGNIZED_ARGUMENT:
+        errorString = "Detected extra unrecognized arguments";
+        break;
+    }
+
+    return errorString;
+}
 
 #endif

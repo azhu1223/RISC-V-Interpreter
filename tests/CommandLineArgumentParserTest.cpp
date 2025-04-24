@@ -50,7 +50,7 @@ TEST_F(CommandLineArgumentParserTest, MissingPath) {
     result = parser.parse();
 
     EXPECT_FALSE(result.first);
-    EXPECT_EQ(result.second.exceptionMessage, "Option 'file' has no value");
+    EXPECT_EQ(result.second.error, ParserErrorCode::MISSING_PATH_OPTION);
 }
 
 TEST_F(CommandLineArgumentParserTest, MissingPathOptionArgument) {
@@ -62,5 +62,5 @@ TEST_F(CommandLineArgumentParserTest, MissingPathOptionArgument) {
     result = parser.parse();
 
     EXPECT_FALSE(result.first);
-    EXPECT_EQ(result.second.exceptionMessage, "Option 'f' is missing an argument");
+    EXPECT_EQ(result.second.error, ParserErrorCode::MISSING_PATH_ARGUMENT);
 }
