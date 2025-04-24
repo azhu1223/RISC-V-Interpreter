@@ -14,7 +14,7 @@ namespace fs = std::filesystem;
 enum class ParserErrorCode {
     MISSING_PATH_OPTION,
     MISSING_PATH_ARGUMENT,
-    UNRECOGNIZED_ARGUMENT
+    UNRECOGNIZED_OPTION
 };
 
 // Stores the results of parsing the command line arguments
@@ -50,7 +50,7 @@ inline std::string CommandLineOptions::parserErrorCodeToString(ParserErrorCode e
     case ParserErrorCode::MISSING_PATH_ARGUMENT:
         errorString = "File path not provided";
         break;
-    case ParserErrorCode::UNRECOGNIZED_ARGUMENT:
+    case ParserErrorCode::UNRECOGNIZED_OPTION:
         errorString = "Detected extra unrecognized arguments";
         break;
     }

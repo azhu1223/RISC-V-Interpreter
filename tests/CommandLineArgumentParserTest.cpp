@@ -64,3 +64,17 @@ TEST_F(CommandLineArgumentParserTest, MissingPathOptionArgument) {
     EXPECT_FALSE(result.first);
     EXPECT_EQ(result.second.error, ParserErrorCode::MISSING_PATH_ARGUMENT);
 }
+
+TEST_F(CommandLineArgumentParserTest, UnrecognizedOption) {
+    std::string unrecognizedArg = "fkfkfkfk";
+    char * argv[] = {m_programName.data(), unrecognizedArg.data()};
+
+    CommandLineArgumentParser parser(2, argv);
+
+    Result<CommandLineOptions> result;
+
+    result = parser.parse();
+
+    EXPECT_FALSE(result.first);
+    EXPECT_EQ(result.second.error, ParserErrorCode::UNRECOGNIZED_OPTION);
+}

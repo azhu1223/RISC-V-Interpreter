@@ -31,7 +31,7 @@ Result<CommandLineOptions> CommandLineArgumentParser::parse() {
     } 
 
     if (results.unmatched().size() != 0) {
-        return {false, {.error = ParserErrorCode::UNRECOGNIZED_ARGUMENT}};
+        return {false, {.error = ParserErrorCode::UNRECOGNIZED_OPTION}};
     }
 
     // If this is true, that means the -f/file option was not provided
