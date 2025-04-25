@@ -3,9 +3,9 @@
 
 #include "Utility.h"
 
-class InstructionSplitter {
+class InstructionDecoder {
 public:
-    void parseOpcode()
+    DecodedInstruction decode(Instruction instruction);
 private:
 };
 
