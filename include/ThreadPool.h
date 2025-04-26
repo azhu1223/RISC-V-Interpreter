@@ -12,9 +12,10 @@
 class ThreadPool {
 public:
     void start();
-    void queueJob();
+    void queueJob(std::function<void()>);
     void stop();
     bool isBusy();
+    ~ThreadPool();
 private:
     void threadLoop();
 
@@ -22,7 +23,7 @@ private:
     std::mutex m_queueMutex;
     std::condition_variable m_mutexCondition;
     std::vector<std::thread> m_threads;
-    std::queue<std::function<void()>> jobs;
+    std::queue<std::function<void()>> m_jobs;
 };
 
 #endif
