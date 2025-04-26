@@ -7,24 +7,26 @@
 #include <mutex>
 #include <functional>
 
-void ThreadPool::start() {
-    int nThreads = std::thread::hardware_concurrency();
+bool ThreadPool::start(int nThreads) {
     for (int i = 0; i < nThreads; i++) {
         m_threads.emplace_back(&ThreadPool::threadLoop, this);
     }
 
+    return true;
 }
 
-void ThreadPool::queueJob(std::function<void()> job) {
+bool ThreadPool::queueJob(std::function<void()> job) {
     {
         u_lock lock(m_queueMutex);
         m_jobs.push(job);
     }
 
     m_mutexCondition.notify_one();
+
+    return true;
 }
 
-void ThreadPool::stop() {
+bool ThreadPool::stop() {
     {
         u_lock lock(m_queueMutex);
         m_shouldTerminate = true;
@@ -36,6 +38,8 @@ void ThreadPool::stop() {
     }
 
     m_threads.clear();
+
+    return true;
 }
 
 bool ThreadPool::isBusy() {

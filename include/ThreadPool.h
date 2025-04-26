@@ -11,9 +11,9 @@
 
 class ThreadPool {
 public:
-    void start();
-    void queueJob(std::function<void()>);
-    void stop();
+    bool start(int nThreads);
+    bool queueJob(std::function<void()>);
+    bool stop();
     bool isBusy();
     ~ThreadPool();
 private:
