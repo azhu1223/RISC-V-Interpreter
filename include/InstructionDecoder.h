@@ -50,9 +50,10 @@ struct DecodedImmediate {
 
 class InstructionDecoder {
 public:
-    static DecodedInstruction decodeInstruction(const Instruction& instruction);
-    static DecodedImmediate generateImmediate(const Instruction& instruction);
+    DecodedInstruction decodeInstruction(const Instruction& instruction) const;
+    DecodedImmediate generateImmediate(const Instruction& instruction) const;
 private:
+    InstructionType determineInstructionType(const Opcode& opcode) const;
 };
 
 #endif
