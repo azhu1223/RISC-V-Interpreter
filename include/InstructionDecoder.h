@@ -4,6 +4,7 @@
 #include "Utility.h"
 
 #include <bitset>
+#include <cstdint>
 
 // An Opcode is 7 bits wide.
 using Opcode = std::bitset<7>;
@@ -41,11 +42,11 @@ struct DecodedInstruction {
 };
 
 struct DecodedImmediate {
-    Immediate12 iImmediate;
-    Immediate12 sImmediate;
-    Immediate12 bImmediate;
-    Immediate20 uImmediate;
-    Immediate20 jImmediate;
+    int32_t iImmediate;
+    int32_t sImmediate;
+    int32_t bImmediate;
+    int32_t uImmediate;
+    int32_t jImmediate;
 };
 
 class InstructionDecoder {

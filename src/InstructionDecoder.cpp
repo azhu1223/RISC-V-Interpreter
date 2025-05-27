@@ -1,6 +1,8 @@
 #include "InstructionDecoder.h"
 #include "Utility.h"
 
+#include <cstdint>
+
 InstructionType InstructionDecoder::determineInstructionType(const Opcode& opcode) const {
     // Tests if it's a branch or jump type instruction
     if (opcode.test(6)) {
@@ -73,4 +75,41 @@ DecodedInstruction InstructionDecoder::decodeInstruction(const Instruction& inst
     funct7 = instructionLong;
 
     return {opcode, rd, funct3, rs1, rs2, funct7, determineInstructionType(opcode)};
+}
+
+DecodedImmediate InstructionDecoder::generateImmediate(const Instruction& instruction) const {
+    int32_t iImmediate;
+    int32_t sImmediate;
+    int32_t bImmediate;
+    int32_t uImmediate;
+    int32_t jImmediate;
+
+    unsigned long long instructionLong = instruction.to_ullong();
+    // Get rid of the opcode, which is not relevant
+    instructionLong >>= 7;
+
+    int32_t sbFirstPart = instructionLong & 0x1f;
+    instructionLong >>= 5;
+
+    int32_t ujRawImmediate = instructionLong;
+    instructionLong >>= 8;
+
+    int32_t iRawImmediate = instructionLong & 0xfff;
+    instructionLong >>= 5;
+
+    int32_t sbSecondPart = instructionLong;
+
+    // Sign extend
+    iImmediate = (iRawImmediate << 20) >> 20;
+    sImmediate = ((sbSecondPart << 25) >> 20) + sbFirstPart;
+
+    int32_t bSignExtention = (((sbSecondPart & 0x40) << 25) >> 19);
+    bImmediate = bSignExtention + ((sbFirstPart & 0x1) << 11) + ((sbSecondPart & 0x3f) << 5) + (sbFirstPart & 0x1e);
+
+    uImmediate = ujRawImmediate << 12;
+
+    int32_t jSignExtention = (((ujRawImmediate & 0x80000) << 12) >> 11);
+    jImmediate = jSignExtention + ((ujRawImmediate & 0xff) << 12) + ((ujRawImmediate & 0x100) << 3) + ((ujRawImmediate & 0x7fe00) >> 8);
+
+    return {iImmediate, sImmediate, bImmediate, uImmediate, jImmediate};
 }
