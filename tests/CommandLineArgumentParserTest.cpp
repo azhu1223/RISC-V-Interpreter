@@ -3,6 +3,8 @@
 #include "CommandLineArgumentParser.h"
 #include "Utility.h"
 
+#include <string>
+
 class CommandLineArgumentParserTest : public ::testing::Test {
 protected:
     std::string m_pathMarker = "-f";
