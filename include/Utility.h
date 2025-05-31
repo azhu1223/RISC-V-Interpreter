@@ -15,7 +15,7 @@ using Result = std::pair<bool, T>;
 using Instruction = std::bitset<32>;
 
 // A Program is a vector of const Instructions
-using Program = std::vector<const Instruction>;
+using Program = std::vector<Instruction>;
 
 // Smart pointer and lock abbreviations
 template <typename T>
