@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.30.3)
-project(nonogram)
+project(risc5interpreter)
 
-set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 23)
 
 # Make sure developers do not run cmake in the main project directory, to keep
 # build artifacts from becoming clutter
@@ -63,14 +63,14 @@ add_executable(CommandLineArgumentParser_test tests/CommandLineArgumentParserTes
 target_link_libraries(
   CommandLineArgumentParser_test
   CommandLineArgumentParser_lib
-  gtest_main
+  GTest::gtest_main
 )
 
 add_executable(ThreadPool_test tests/ThreadPoolTest.cpp)
 target_link_libraries(
   ThreadPool_test
   ThreadPool_lib
-  gtest_main
+  GTest::gtest_main
 )
 
 gtest_discover_tests(CommandLineArgumentParser_test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
