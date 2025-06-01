@@ -1,5 +1,5 @@
-#ifndef FILE_SYSTEM_HANDLER
-#define FILE_SYSTEM_HANDLER
+#ifndef FILE_SYSTEM_HANDLER_H
+#define FILE_SYSTEM_HANDLER_H
 
 #include "Utility.h"
 

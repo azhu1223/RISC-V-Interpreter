@@ -1,5 +1,5 @@
-#ifndef OPCODE_DECODER
-#define OPCODE_DECODER
+#ifndef OPCODE_DECODER_H
+#define OPCODE_DECODER_H
 
 #include "Utility.h"
 
