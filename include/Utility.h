@@ -14,10 +14,10 @@ using Result = std::pair<bool, T>;
 // An Instruction is 32 bits wide.
 using Instruction = std::bitset<32>;
 
-// A Program is a vector of Instructions
+// A Program is a vector of const Instructions
 using Program = std::vector<Instruction>;
 
-// Smart pointers
+// Smart pointer and lock abbreviations
 template <typename T>
 using u_ptr = std::unique_ptr<T>;
 
