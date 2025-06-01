@@ -18,11 +18,23 @@ protected:
     }
 };
 
+#include <sstream>
+#include <iostream>
+
 TEST_F(InstructionDecoderTest, DecodeInstruction) {
     std::vector<DecodedInstruction> decodedInstructions;
+
+    std::stringstream ss;
+    ss << std::hex;
+
     for (const Instruction& i : program) {
+        ss << i.to_ulong() << '\n';
         decodedInstructions.push_back(id.decodeInstruction(i));
     }
+
+    ss << '\n';
+
+    std::cout << ss.str();
     
     // First instruction
     DecodedInstruction& di = decodedInstructions[0];
@@ -87,8 +99,8 @@ TEST_F(InstructionDecoderTest, DecodeInstruction) {
     EXPECT_EQ(di.funct3, 0b001);
 
     // Check correct registers
-    EXPECT_EQ(di.rd, 0b00111);
-    EXPECT_EQ(di.rs1, 0b01010);
+    EXPECT_EQ(di.rs1, 0b00111);
+    EXPECT_EQ(di.rs2, 0b01010);
 
     // Check type
     EXPECT_EQ(di.type, InstructionType::B);
