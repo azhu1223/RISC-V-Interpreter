@@ -52,6 +52,7 @@ add_library(BinaryFileSystemHandler_lib src/BinaryFileSystemHandler.cpp)
 add_library(CommandLineArgumentParser_lib src/CommandLineArgumentParser.cpp)
 add_library(ThreadPool_lib src/ThreadPool.cpp)
 add_library(InstructionDecoder_lib src/InstructionDecoder.cpp)
+add_library(RegisterTable_lib src/RegisterTable.cpp)
 
 add_executable(interpreter src/main.cpp)
 target_link_libraries(
@@ -78,9 +79,17 @@ add_executable(InstructionDecoder_test tests/InstructionDecoderTest.cpp)
 target_link_libraries(
   InstructionDecoder_test
   InstructionDecoder_lib
-  gtest_main
+  GTest::gtest_main
+)
+
+add_executable(RegisterTable_test tests/RegisterTableTest.cpp)
+target_link_libraries(
+  RegisterTable_test
+  RegisterTable_lib
+  GTest::gtest_main
 )
 
 gtest_discover_tests(CommandLineArgumentParser_test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
 gtest_discover_tests(ThreadPool_test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
 gtest_discover_tests(InstructionDecoder_test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+gtest_discover_tests(RegisterTable_test WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/tests)

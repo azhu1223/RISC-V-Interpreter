@@ -26,10 +26,13 @@ TEST_F(RegisterTableTest, Set) {
 }
 
 TEST_F(RegisterTableTest, Get) {
-    EXPECT_EQ(m_rt.get(0), 0);
+    Result<uint32_t> result = m_rt.get(0);
+
+    EXPECT_TRUE(result.first);
+    EXPECT_EQ(result.second, 0);
 
     for (int i = 1; i < 31; i++) {
-        Result<uint32_t> result = m_rt.get(i);
+        result = m_rt.get(i);
 
         EXPECT_TRUE(result.first);
         EXPECT_EQ(result.second, i + 1);
