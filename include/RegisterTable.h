@@ -12,7 +12,7 @@ class RegisterTable {
 public:
     RegisterTable(u_ptr<RegisterArray> regArray);
     bool set(uint8_t reg, uint32_t val);
-    uint32_t get(uint8_t reg) const;
+    Result<uint32_t> get(uint8_t reg) const;
 private:
     u_ptr<RegisterArray> m_regArray;
     int m_numRegisters;

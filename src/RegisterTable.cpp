@@ -24,6 +24,10 @@ bool RegisterTable::set(uint8_t reg, uint32_t val) {
     return true;
 }
 
-uint32_t RegisterTable::get(uint8_t reg) const {
-    return (*m_regArray)[reg];
+Result<uint32_t> RegisterTable::get(uint8_t reg) const {
+    if (reg >= 32) {
+        return {false, 0};
+    }
+    
+    return {true, (*m_regArray)[reg]};
 }
