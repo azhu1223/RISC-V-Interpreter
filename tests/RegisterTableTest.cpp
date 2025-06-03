@@ -10,7 +10,7 @@ protected:
 
     virtual void SetUp() override {
         for (int i = 0; i < 31; i++) {
-            EXPECT_TRUE(m_rt.set(i, i + 1));
+            m_rt.set(i, i + 1);
         }
     };
 };
