@@ -9,15 +9,17 @@
 #include <mutex>
 #include <functional>
 #include <condition_variable>
+#include <atomic>
 
 class ThreadPool {
 public:
     bool start(int nThreads);
-    bool queueJob(std::function<void()>);
     bool stop();
     bool isBusy();
+    bool addAndWait(std::function<void()> addJobs);
     ~ThreadPool();
 private:
+    bool queueJob(std::function<void()> job);
     void threadLoop();
 
     bool m_shouldTerminate;
@@ -25,6 +27,10 @@ private:
     std::condition_variable m_mutexCondition;
     std::vector<std::thread> m_threads;
     std::queue<std::function<void()>> m_jobs;
+
+    std::mutex m_mainThreadMutex;
+    std::condition_variable m_mainThreadCondition;
+    std::atomic<int> m_nProcessesRunning;
 };
 
 #endif
