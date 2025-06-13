@@ -16,10 +16,10 @@ public:
     bool start(int nThreads);
     bool stop();
     bool isBusy();
-    bool addAndWait(std::function<void()> addJobs);
+    bool queueJob(std::function<void()> job);
+    bool wait();
     ~ThreadPool();
 private:
-    bool queueJob(std::function<void()> job);
     void threadLoop();
 
     bool m_shouldTerminate;
