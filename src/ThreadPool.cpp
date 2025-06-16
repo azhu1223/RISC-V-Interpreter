@@ -44,10 +44,20 @@ bool ThreadPool::isBusy() {
     bool isBusy;
     {
         u_lock lock(m_queueMutex);
-        isBusy = !m_jobs.empty();
+        isBusy = !(m_jobs.empty() && m_nProcessesRunning > 0);
     }
 
     return isBusy;
+}
+
+bool ThreadPool::wait() {
+    u_lock lock(m_mainThreadMutex);
+
+    if (isBusy()) {
+        m_mainThreadCondition.wait(lock, [this] () {
+            return !this->isBusy();
+        });
+    }
 }
 
 void ThreadPool::threadLoop() {
@@ -55,19 +65,34 @@ void ThreadPool::threadLoop() {
         std::function<void()> job;
         {
             u_lock lock(m_queueMutex);
-            m_mutexCondition.wait(lock, [this] {
-                return !m_jobs.empty() || m_shouldTerminate;
-            });
+
+            if (m_jobs.empty()) {
+                m_mutexCondition.wait(lock, [this] {
+                    return !m_jobs.empty() || m_shouldTerminate;
+                });
+            }
 
             if (m_shouldTerminate) {
                 return;
             }
+
+            m_nProcessesRunning++;
 
             job = m_jobs.front();
             m_jobs.pop();
         }
 
         job();
+
+        u_lock queueLock(m_queueMutex);
+
+        if (--m_nProcessesRunning == 0 && m_jobs.empty()) {
+            queueLock.unlock();
+            
+            u_lock mainLock(m_mainThreadMutex);
+
+            m_mainThreadCondition.notify_one();
+        }
     }
 }
 

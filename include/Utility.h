@@ -11,6 +11,9 @@
 template <typename T>
 using Result = std::pair<bool, T>;
 
+template <typename C>
+using Iterator = T::iterator;
+
 // An Instruction is 32 bits wide.
 using Instruction = std::bitset<32>;
 
