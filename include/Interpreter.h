@@ -12,7 +12,8 @@ class Interpreter {
 public:
     u_ptr<RegisterTable> interpret(const Program& program) const;
 private:
-    void processInstructions(ThreadPool& tp, const InstructionDecoder& id, const Program& program) const;
+    void processInstructions(ThreadPool& tp, const InstructionDecoder& id, const Program& program,
+        std::vector<DecodedInstruction>& decodedInstructions, std::vector<DecodedImmediate>& decodedImmediates) const;
     void instructionThreadWork(const InstructionDecoder& id, 
         const Iterator<Program>& start, const Iterator<Program>& end, 
         Iterator<std::vector<DecodedInstruction>>& diStart) const;

@@ -17,12 +17,16 @@ u_ptr<RegisterTable> Interpreter::interpret(const Program& program) const {
 
     InstructionDecoder id;
 
-    processInstructions(tp, id, program);
+    std::vector<DecodedInstruction> decodedInstructions;
+    std::vector<DecodedImmediate> decodedImmediates;
+
+    processInstructions(tp, id, program, decodedInstructions, decodedImmediates);
 
     return std::move(rt);
 }
 
-void Interpreter::processInstructions(ThreadPool& tp, const InstructionDecoder& id, const Program& program) const {
+void Interpreter::processInstructions(ThreadPool& tp, const InstructionDecoder& id, const Program& program,
+    std::vector<DecodedInstruction>& decodedInstructions, std::vector<DecodedImmediate>& decodedImmediates) const {
     int programSize = program.size();
     int maxConcurrency = std::thread::hardware_concurrency();
     int nJobs = programSize > maxConcurrency ? maxConcurrency : programSize;
@@ -33,12 +37,29 @@ void Interpreter::processInstructions(ThreadPool& tp, const InstructionDecoder& 
     InstructionDecoder id;
 
     auto programEnd = program.end();
+    auto instructionIt = decodedInstructions.begin();
+    auto immediateIt = decodedImmediates.begin();
+
     for (auto it = program.begin(); it != programEnd;) {
         int currentJobSize = jobSize;
         if (extraJobs > 0) {
             currentJobSize++;
             extraJobs--;
-        } 
+        }
+
+        auto endIt = it + currentJobSize;
+
+        tp.queueJob([&, this] () {
+            this->instructionThreadWork(id, it, endIt, instructionIt);
+        });
+
+        tp.queueJob([&, this] () {
+            this->immediateThreadWork(id, it, endIt, immediateIt);
+        });
+
+        it = endIt;
+        instructionIt += currentJobSize;
+        immediateIt += currentJobSize;
     }
 };
 
